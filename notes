@@ -1,0 +1,26 @@
+NGNIX
+Nos permite pasar las peticiones HTTP del back y el front
+
+Creando un proxy intermedio para exponer los servicios especificando la rutas.
+
+Esto seria un servidor web de produccion
+
+C:\Users\JUAN.MENDIVELSO\Desktop\MERN\proyecto_back\public\images\índice.png  
+
+
+
+es un archivo de configuracion de ngnix en el cual se pueden agregar los certificados ssl de un sitio para verificar su seguridad
+
+
+desde aqui se hacen las redirecciones, cuando alguien acceda a la ip de nuestor servidor, lo sabremos y lo vamos a redirigir con este objeto
+
+
+location /api/user {
+  proxy-pass: http://localhost:3000
+}
+
+location /api/post {
+  proxy-pass: http://localhost:3002/
+}
+
+
