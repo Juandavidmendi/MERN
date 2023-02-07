@@ -4,11 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var database = require("./config/database"); //llamar la conexion
+var auth = require("./auth/main_auth");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var empleadosRouter = require('./routes/empleados.router');
 var verdurasRouter = require('./routes/verduras.router');
+var usuariosRouter = require('./routes/usuarios.router');
 
 var app = express();
 
@@ -22,9 +22,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 //mongo conexion
 database.mongoConnect(); 
 
+app.use('/usuarios', usuariosRouter);
+//usar autenticador
+app.use(auth);
 //routes cada ruta va acá
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/empleados', empleadosRouter);
 app.use('/verduras', verdurasRouter);
 
@@ -42,6 +43,10 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+// res.json({
+//     message: err.message,
+//     error: err
+//   });
 });
 
 module.exports = app;
