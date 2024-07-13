@@ -5,6 +5,7 @@ const usuariosController = require("../controllers/usuarios.controller");
 router.get("/:id", usuariosController.findOne);
 router.get("/", usuariosController.find);
 router.post("/login", usuariosController.login);
+router.post('/register', usuariosController.register);
 // router.get("/", usuariosController.buscarUsuarios);
 
 
