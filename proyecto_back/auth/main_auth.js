@@ -8,7 +8,7 @@ const auth = (req, res, next) => {
         next()
     }catch(error){
         res.status(401)
-        res.json({code:4, msg: "no tiene autoziacion para ver el contenido"})
+        res.json({code:4, msg: "no tiene autorizacion para ver el contenido"})
     }
 }
 

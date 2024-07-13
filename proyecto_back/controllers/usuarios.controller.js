@@ -1,35 +1,45 @@
 const Usuario = require("../models/usuarios.model");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const yup = require('yup');
 
-exports.login = function(req, res, next){
+const loginSchema = yup.object().shape({
+    usuario: yup.string().required('El usuario es requerido'),
+    pass: yup.string().required('La contraseña es requerida')
+});
 
-    let hashedpass = crypto.createHash("sha512").update(req.body.pass).digest("hex");
+exports.login = async function(req, res, next) {
+    try {
+        await loginSchema.validate(req.body);
 
-    Usuario.findOne({usuario: req.body.usuario, pass: hashedpass}, function(err, usuario){
-        let response = {
-            token:null,
-        }
-        if(usuario !== null){
-            response.token = jwt.sign({
-                id: usuario._id,
-                usuario: usuario.usuario
-            }, "__recret__",
-            { expiresIn: '12h'}
-            )
-        }
-        res.json(response);
-    })
+        let hashedpass = crypto.createHash("sha512").update(req.body.pass).digest("hex");
+
+        Usuario.findOne({ usuario: req.body.usuario, pass: hashedpass }, function(err, usuario) {
+            let response = {
+                token: null,
+            }
+            if (usuario !== null) {
+                response.token = jwt.sign({
+                    id: usuario._id,
+                    usuario: usuario.usuario
+                }, "__recret__",
+                { expiresIn: '12h' });
+            }
+            res.json(response);
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 }
 
-exports.findOne = function(req,res){
-    Usuario.findOne({_id: req.params.id},function(err, usuario){
-        res.json(usuario)
-    })
+exports.findOne = function(req, res) {
+    Usuario.findOne({ _id: req.params.id }, function(err, usuario) {
+        res.json(usuario);
+    });
 }
 
-exports.find = function(req,res){
-    Usuario.find(function(err, usuarios){
-        res.json(usuarios)
-    })
+exports.find = function(req, res) {
+    Usuario.find(function(err, usuarios) {
+        res.json(usuarios);
+    });
 }

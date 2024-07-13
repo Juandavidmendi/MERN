@@ -12,6 +12,9 @@ var usuariosRouter = require('./routes/usuarios.router');
 
 var app = express();
 
+// Set up the view engine
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -20,22 +23,26 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //mongo conexion
-database.mongoConnect(); 
+database.mongoConnect();
 
 app.use('/usuarios', usuariosRouter);
 //usar autenticador
-app.use(auth);
+// app.use(auth);
 //routes cada ruta va acá
 app.use('/empleados', empleadosRouter);
 app.use('/verduras', verdurasRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
+app.get("/", async (req, res) => {
+  res.send("ok-s");
+});
+
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -43,10 +50,10 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-// res.json({
-//     message: err.message,
-//     error: err
-//   });
+  // res.json({
+  //     message: err.message,
+  //     error: err
+  //   });
 });
 
 module.exports = app;
